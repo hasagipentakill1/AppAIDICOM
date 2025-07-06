@@ -1,0 +1,15 @@
+com\medical\repository\ReportRepository.class
+com\medical\controller\ApiController$ReportDto.class
+com\medical\repository\DicomImageRepository.class
+com\medical\model\Annotation.class
+com\medical\controller\PatientController.class
+com\medical\controller\ApiController.class
+com\medical\repository\PatientRepository.class
+com\medical\model\AIResult.class
+com\medical\model\DicomImage.class
+com\medical\repository\AIResultRepository.class
+com\medical\repository\AnnotationRepository.class
+com\medical\service\PatientService.class
+com\medical\DoctorInterfaceApplication.class
+com\medical\model\Patient.class
+com\medical\model\Report.class

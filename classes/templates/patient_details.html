@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Hồ sơ Bệnh nhân</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body { background-color: #f8f9fa; }
+        .patient-info-card { margin-bottom: 20px; }
+        .nav-tabs .nav-link.active { font-weight: bold; }
+        .back-btn { margin-right: 10px; }
+        
+        /* New styles */
+        .image-card {
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .image-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .image-card.selected {
+            border: 2px solid #0d6efd;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+        #modalImage {
+            max-height: 70vh;
+            object-fit: contain;
+        }
+        .annotation-marker {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background-color: red;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/doctor/home"><i class="bi bi-house-door"></i> Trang chủ</a></li>
+                <li class="breadcrumb-item"><a href="/doctor/patients">Quản lý Bệnh nhân</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Hồ sơ BN-[[${patient.id}]]</li>
+            </ol>
+        </nav>
+
+        <!-- Page Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="text-primary">
+                <i class="bi bi-person-badge"></i> Hồ sơ Bệnh nhân: [[${patient.name}]]
+            </h1>
+            <div>
+                <a th:href="@{/doctor/patients}" class="btn btn-outline-secondary">
+    <i class="bi bi-arrow-left"></i> Quay lại
+</a>
+                <a href="#" class="btn btn-warning me-1">
+                    <i class="bi bi-pencil"></i> Chỉnh sửa
+                </a>
+                <a href="#" class="btn btn-danger">
+                    <i class="bi bi-printer"></i> In hồ sơ
+                </a>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Thông tin cơ bản -->
+            <div class="col-md-4">
+                <div class="card patient-info-card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="bi bi-info-circle"></i> Thông tin cơ bản</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="fw-bold">Mã BN:</label>
+                            <p>BN-[[${patient.id}]]</p>
+                        </div>
+                        <div class="mb-3">
+                            <label class="fw-bold">Ngày sinh:</label>
+                            <p>[[${patient.dateOfBirth}]]</p>
+                        </div>
+                        <div class="mb-3">
+                            <label class="fw-bold">Giới tính:</label>
+                            <p>[[${patient.gender}]]</p>
+                        </div>
+                        <div class="mb-3">
+                            <label class="fw-bold">Địa chỉ:</label>
+                            <p>123 Đường ABC, Quận 1, TP.HCM</p>
+                        </div>
+                        <div class="mb-3">
+                            <label class="fw-bold">SĐT:</label>
+                            <p>0909123456</p>
+                        </div>
+                        <div class="mb-3">
+                            <label class="fw-bold">Trạng thái:</label>
+                            <span class="badge bg-success">Đang điều trị</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Thông tin y tế -->
+                <div class="card patient-info-card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="bi bi-heart-pulse"></i> Thông tin y tế</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="fw-bold">Nhóm máu:</label>
+                            <p>A+</p>
+                        </div>
+                        <div class="mb-3">
+                            <label class="fw-bold">Dị ứng:</label>
+                            <p>Không</p>
+                        </div>
+                        <div class="mb-3">
+                            <label class="fw-bold">Bệnh nền:</label>
+                            <p>Tiểu đường</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nội dung chính -->
+            <div class="col-md-8">
+                <ul class="nav nav-tabs" id="patientTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="history-tab" data-bs-toggle="tab"
+                                data-bs-target="#history" type="button" role="tab">
+                            <i class="bi bi-clock-history"></i> Lịch sử khám
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="images-tab" data-bs-toggle="tab"
+                                data-bs-target="#images" type="button" role="tab">
+                            <i class="bi bi-images"></i> Hình ảnh
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="ai-tab" data-bs-toggle="tab"
+                                data-bs-target="#ai" type="button" role="tab">
+                            <i class="bi bi-robot"></i> Kết quả AI
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="prescriptions-tab" data-bs-toggle="tab"
+                                data-bs-target="#prescriptions" type="button" role="tab">
+                            <i class="bi bi-prescription2"></i> Đơn thuốc
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content p-3 border border-top-0 rounded-bottom shadow-sm bg-white">
+                    <!-- Tab Lịch sử khám -->
+                    <div class="tab-pane fade show active" id="history" role="tabpanel">
+                        <div class="list-group">
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">Khám ngày 03/07/2025</h5>
+                                    <small>Dr. Nguyễn Văn A</small>
+                                </div>
+                                <p class="mb-1">Chẩn đoán: Đau đầu, chóng mặt</p>
+                                <small>Kê đơn: Paracetamol 500mg</small>
+                            </div>
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">Khám ngày 25/06/2025</h5>
+                                    <small>Dr. Nguyễn Văn A</small>
+                                </div>
+                                <p class="mb-1">Chẩn đoán: Cảm cúm</p>
+                                <small>Kê đơn: Thuốc cảm</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab Hình ảnh -->
+                    <div class="tab-pane fade" id="images" role="tabpanel">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <select class="form-select" id="imageTypeFilter">
+                                        <option value="all">Tất cả loại ảnh</option>
+                                        <option value="xray">X-quang</option>
+                                        <option value="mri">MRI</option>
+                                        <option value="ct">CT Scan</option>
+                                    </select>
+                                    <button class="btn btn-outline-primary" type="button" id="compareImagesBtn">
+                                        <i class="bi bi-layers"></i> So sánh
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-6 text-end">
+                                <button class="btn btn-primary" id="orderNewImageBtn">
+                                    <i class="bi bi-camera"></i> Yêu cầu chụp mới
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="row" id="imageGallery">
+                            <div class="col-md-4 mb-3">
+                                <div class="card image-card" data-image-id="1" data-image-type="xray" data-image-date="2025-07-03">
+                                    <img src="/api/dicom-preview?path=/images/xray1.dcm" class="card-img-top" alt="X-quang">
+                                    <div class="card-body">
+                                        <h6 class="card-title">X-quang ngực</h6>
+                                        <p class="card-text text-muted small">03/07/2025</p>
+                                        <div class="d-flex justify-content-between">
+                                            <button class="btn btn-sm btn-outline-primary view-image-btn">
+                                                <i class="bi bi-eye"></i> Xem
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary annotate-btn">
+                                                <i class="bi bi-pencil"></i> Ghi chú
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="card image-card" data-image-id="2" data-image-type="mri" data-image-date="2025-06-25">
+                                    <img src="/api/dicom-preview?path=/images/mri1.dcm" class="card-img-top" alt="MRI">
+                                    <div class="card-body">
+                                        <h6 class="card-title">MRI não</h6>
+                                        <p class="card-text text-muted small">25/06/2025</p>
+                                        <div class="d-flex justify-content-between">
+                                            <button class="btn btn-sm btn-outline-primary view-image-btn">
+                                                <i class="bi bi-eye"></i> Xem
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary annotate-btn">
+                                                <i class="bi bi-pencil"></i> Ghi chú
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal xem ảnh -->
+                        <div class="modal fade" id="imageViewerModal" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-xl">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="imageModalTitle">X-quang ngực - 03/07/2025</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body text-center">
+                                        <div style="position: relative; display: inline-block;">
+                                            <img id="modalImage" src="" class="img-fluid" alt="Hình ảnh DICOM" style="max-height: 70vh;">
+                                            <div id="imageAnnotationsContainer" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></div>
+                                        </div>
+                                        <div id="imageAnnotations" class="mt-3">
+                                            <!-- Các ghi chú sẽ được hiển thị ở đây -->
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-primary" id="addAnnotationBtn">
+                                            <i class="bi bi-pencil"></i> Thêm ghi chú
+                                        </button>
+                                        <button class="btn btn-success" id="createReportBtn">
+                                            <i class="bi bi-file-earmark-text"></i> Tạo báo cáo
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab Kết quả AI -->
+                    <div class="tab-pane fade" id="ai" role="tabpanel">
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i> Kết quả AI chỉ mang tính chất tham khảo, bác sĩ cần đưa ra chẩn đoán cuối cùng.
+                        </div>
+
+                        <div class="card mb-3">
+                            <div class="card-header bg-primary text-white">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span>Phân tích ảnh X-quang ngực</span>
+                                    <span class="badge bg-light text-dark">03/07/2025</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h5>Kết quả AI:</h5>
+                                <div class="alert alert-warning">
+                                    <p>Có dấu hiệu viêm phổi nhẹ (độ tin cậy: 87%)</p>
+                                    <p>Vị trí tổn thương: thùy dưới phổi phải</p>
+                                    <p>Kích thước tổn thương: 1.2cm x 0.8cm</p>
+                                </div>
+                                
+                                <h5 class="mt-4">Chẩn đoán của bác sĩ:</h5>
+                                <form id="finalDiagnosisForm">
+                                    <div class="mb-3">
+                                        <label for="diagnosisText" class="form-label">Nhập chẩn đoán cuối cùng:</label>
+                                        <textarea class="form-control" id="diagnosisText" rows="3" required></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Độ nghiêm trọng:</label>
+                                        <select class="form-select" id="severityLevel" required>
+                                            <option value="">Chọn mức độ</option>
+                                            <option value="low">Nhẹ</option>
+                                            <option value="medium">Trung bình</option>
+                                            <option value="high">Nặng</option>
+                                            <option value="critical">Nguy kịch</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-check-circle"></i> Xác nhận chẩn đoán
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab Đơn thuốc -->
+                    <div class="tab-pane fade" id="prescriptions" role="tabpanel">
+                        <div class="mb-3">
+                            <button class="btn btn-primary">
+                                <i class="bi bi-plus-circle"></i> Tạo đơn thuốc mới
+                            </button>
+                        </div>
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                Đơn thuốc ngày 03/07/2025
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item">
+                                        <div class="d-flex justify-content-between">
+                                            <span>Paracetamol 500mg</span>
+                                            <span>2 viên/ngày</span>
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <div class="d-flex justify-content-between">
+                                            <span>Vitamin C</span>
+                                            <span>1 viên/ngày</span>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <div class="mt-3">
+                                    <p class="fw-bold">Ghi chú:</p>
+                                    <p>Uống sau khi ăn. Tái khám sau 5 ngày.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal so sánh ảnh -->
+    <div class="modal fade" id="compareImagesModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">So sánh hình ảnh theo thời gian</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6 class="text-center">Ảnh 1: X-quang ngực - 03/07/2025</h6>
+                            <img src="/api/dicom-preview?path=/images/xray1.dcm" class="img-fluid border" alt="Ảnh 1">
+                            <div class="mt-2">
+                                <select class="form-select select-image-1">
+                                    <option value="1" selected>03/07/2025 - X-quang ngực</option>
+                                    <option value="2">25/06/2025 - X-quang ngực</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-center">Ảnh 2: X-quang ngực - 25/06/2025</h6>
+                            <img src="/api/dicom-preview?path=/images/xray2.dcm" class="img-fluid border" alt="Ảnh 2">
+                            <div class="mt-2">
+                                <select class="form-select select-image-2">
+                                    <option value="1">03/07/2025 - X-quang ngực</option>
+                                    <option value="2" selected>25/06/2025 - X-quang ngực</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <i class="bi bi-clipboard2-pulse"></i> Nhận xét so sánh
+                                </div>
+                                <div class="card-body">
+                                    <textarea class="form-control" rows="3" placeholder="Ghi nhận xét về sự thay đổi giữa các lần chụp..."></textarea>
+                                    <button class="btn btn-primary mt-2">
+                                        <i class="bi bi-save"></i> Lưu nhận xét
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal yêu cầu chụp ảnh -->
+    <div class="modal fade" id="orderImageModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Yêu cầu chụp ảnh mới</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="orderImageForm">
+                        <div class="mb-3">
+                            <label class="form-label">Loại hình ảnh:</label>
+                            <select class="form-select" required>
+                                <option value="">Chọn loại hình ảnh</option>
+                                <option value="xray">X-quang</option>
+                                <option value="ct">CT Scan</option>
+                                <option value="mri">MRI</option>
+                                <option value="ultrasound">Siêu âm</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Vùng cần chụp:</label>
+                            <input type="text" class="form-control" placeholder="Ví dụ: Ngực, đầu, bụng..." required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Ghi chú cho kỹ thuật viên:</label>
+                            <textarea class="form-control" rows="3" placeholder="Yêu cầu đặc biệt, tư thế chụp..."></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Ưu tiên:</label>
+                            <select class="form-select">
+                                <option value="normal">Bình thường</option>
+                                <option value="urgent">Khẩn cấp</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="submitOrderBtn">Gửi yêu cầu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Mở modal xem ảnh
+            $('.view-image-btn').click(function() {
+                const card = $(this).closest('.image-card');
+                const title = card.find('.card-title').text();
+                const date = card.find('.card-text').text();
+                $('#imageModalTitle').text(`${title} - ${date}`);
+                $('#modalImage').attr('src', card.find('img').attr('src'));
+                $('#imageViewerModal').modal('show');
+            });
+
+            // Mở modal so sánh ảnh
+            $('#compareImagesBtn').click(function() {
+                $('#compareImagesModal').modal('show');
+            });
+
+            // Mở modal yêu cầu chụp ảnh mới
+            $('#orderNewImageBtn').click(function() {
+                $('#orderImageModal').modal('show');
+            });
+
+            // Xử lý thêm ghi chú
+            $('#addAnnotationBtn').click(function() {
+                const annotationText = prompt("Nhập ghi chú cho hình ảnh:");
+                if (annotationText) {
+                    $('#imageAnnotations').append(`
+                        <div class="alert alert-info alert-dismissible fade show">
+                            ${annotationText}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            <small class="d-block">Dr. Nguyễn Văn A - ${new Date().toLocaleString()}</small>
+                        </div>
+                    `);
+                }
+            });
+
+            // Xử lý tạo báo cáo
+            $('#createReportBtn').click(function() {
+                window.location.href = `/doctor/reports/new?patientId=[[${patient.id}]]`;
+            });
+
+            // Xử lý chọn ảnh để so sánh
+            $('.image-card').click(function() {
+                if ($(this).hasClass('selected')) {
+                    $(this).removeClass('selected');
+                } else {
+                    $(this).addClass('selected');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
