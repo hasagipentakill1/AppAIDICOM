@@ -1,0 +1,24 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-AidicomApplication<aidicom>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.aidicom.aidicom.AidicomApplication",
+            "projectName": "aidicom",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-DoctorInterfaceApplication<aidicom>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.medical.DoctorInterfaceApplication",
+            "projectName": "aidicom",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
