@@ -1,0 +1,24 @@
+package com.medical.dto;
+
+import java.time.LocalDate;
+
+public class ReportDto {
+    private String title;
+    private String diagnosis;
+    private String treatment;
+    private String recommendations;
+    private List<String> attachedImages;
+
+    // Getters và Setters
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+
+    public String getDiagnosis() { return diagnosis; }
+    public void setDiagnosis(String diagnosis) { this.diagnosis = diagnosis; }
+
+    public String getTreatment() { return treatment; }
+    public void setTreatment(String treatment) { this.treatment = treatment; }
+
+    public String getRecommendations() { return recommendations; }
+    public void setRecommendations(String recommendations) { this.recommendations = recommendations; }
+}
