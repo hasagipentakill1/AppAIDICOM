@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UMC Care - Trình Xem Ảnh Y Tế</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4a6cf7;
+            --secondary: #6f42c1;
+            --accent: #20c997;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7ff 0%, #e6e9ff 100%);
+            min-height: 100vh;
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 0 0 20px 20px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            background: rgba(255, 255, 255, 0.2);
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .logo-icon i {
+            font-size: 24px;
+            color: white;
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        .user-details {
+            text-align: right;
+        }
+
+        .user-name {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .user-role {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Main Content */
+        .viewer-container {
+            display: flex;
+            gap: 30px;
+            height: calc(100vh - 200px);
+        }
+
+        /* Image List */
+        .image-list {
+            width: 25%;
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            overflow-y: auto;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: var(--dark);
+        }
+
+        .section-title i {
+            color: var(--primary);
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100%, 1fr));
+            gap: 15px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .image-card {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .image-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(74, 108, 247, 0.2);
+            border-color: var(--primary);
+        }
+
+        .image-card.active {
+            background: rgba(74, 108, 247, 0.1);
+            border-color: var(--primary);
+        }
+
+        .image-name {
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 18px;
+            color: var(--primary);
+        }
+
+        .image-details {
+            font-size: 14px;
+            color: #6c757d;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .image-details i {
+            width: 20px;
+            text-align: center;
+            color: var(--secondary);
+        }
+
+        .divider {
+            height: 1px;
+            background: #e9ecef;
+            margin: 15px 0;
+        }
+
+        /* Upload Section */
+        .upload-section {
+            margin-top: 20px;
+            background: #f0f5ff;
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px dashed #4a6cf7;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .upload-section:hover {
+            background: #e0e7ff;
+            transform: translateY(-3px);
+        }
+
+        .upload-icon {
+            font-size: 32px;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .upload-text {
+            font-weight: 500;
+            color: var(--primary);
+            margin-bottom: 5px;
+            font-size: 18px;
+        }
+
+        .upload-hint {
+            font-size: 13px;
+            color: #6c757d;
+        }
+
+        #file-input {
+            display: none;
+        }
+
+        /* Image Display */
+        .image-display {
+            flex: 1;
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .viewer-header {
+            padding: 20px 30px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .current-image {
+            font-size: 22px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .current-image i {
+            color: var(--primary);
+        }
+
+        .image-tags {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .image-tag {
+            background: #f0f5ff;
+            color: var(--primary);
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Image Content */
+        .image-content {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: 
+                linear-gradient(45deg, #f8fafc 25%, transparent 25%, transparent 75%, #f8fafc 75%),
+                linear-gradient(45deg, #f8fafc 25%, transparent 25%, transparent 75%, #f8fafc 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-preview {
+            max-width: 90%;
+            max-height: 85%;
+            border-radius: 10px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            object-fit: contain;
+            display: none;
+        }
+
+        .placeholder-content {
+            text-align: center;
+            z-index: 2;
+            color: var(--primary);
+        }
+
+        .placeholder-content i {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.7;
+        }
+
+        .placeholder-content h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .placeholder-content p {
+            color: #6c757d;
+        }
+
+        /* Image Controls */
+        .image-controls {
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            transition: var(--transition);
+        }
+
+        .tools-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .tools-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .toggle-tools {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e2e8f0;
+            color: var(--dark);
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .toggle-tools:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            transition: var(--transition);
+            max-height: 500px;
+            overflow: hidden;
+        }
+
+        .tools-grid.collapsed {
+            max-height: 0;
+            opacity: 0;
+            margin: 0;
+            padding: 0;
+        }
+
+        .tool-btn {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .tool-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .tool-icon {
+            font-size: 24px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f0f5ff;
+            color: var(--primary);
+        }
+
+        .tool-name {
+            font-weight: 500;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        /* Upload Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .modal-header h2 {
+            font-size: 24px;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .upload-area {
+            border: 2px dashed #4a6cf7;
+            border-radius: 15px;
+            padding: 40px 20px;
+            text-align: center;
+            background: #f8fafc;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .upload-area:hover {
+            background: #f0f5ff;
+        }
+
+        .upload-area i {
+            font-size: 48px;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .upload-area p {
+            color: #6c757d;
+            margin: 10px 0;
+        }
+
+        .file-info {
+            display: none;
+            background: #f0f5ff;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 5px;
+        }
+
+        .file-size {
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .modal-footer {
+            padding: 20px;
+            background: #f8f9fa;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .modal-btn {
+            padding: 12px 25px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+        }
+
+        .btn-secondary {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .btn-secondary:hover {
+            background: #dde2e6;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 5px 15px rgba(111, 66, 193, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(111, 66, 193, 0.4);
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4BB543;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 2000;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
+        .notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .viewer-container {
+                flex-direction: column;
+                height: auto;
+            }
+            
+            .image-list {
+                width: 100%;
+                height: auto;
+                max-height: 400px;
+            }
+            
+            .image-display {
+                width: 100%;
+                min-height: 70vh;
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+                padding: 20px;
+            }
+            
+            .user-details {
+                text-align: center;
+            }
+            
+            .viewer-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .image-tags {
+                justify-content: center;
+            }
+            
+            .tools-grid {
+                grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-x-ray"></i>
+                </div>
+                <div class="logo-text">UMC Care - Trình Xem Ảnh Y Tế</div>
+            </div>
+            
+            <div class="user-info">
+                <div class="user-avatar">YT</div>
+                <div class="user-details">
+                    <div class="user-name">Y tá Ngọc Anh</div>
+                    <div class="user-role">Khoa Chẩn đoán hình ảnh</div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Main Content -->
+        <div class="viewer-container">
+            <!-- Image List -->
+            <div class="image-list">
+                <h3 class="section-title">
+                    <i class="fas fa-images"></i>
+                    Danh sách ảnh
+                </h3>
+                
+                <div class="image-grid">
+                    <div class="image-card active" onclick="viewImage('X-Quang Ngực', 'BN-4818')">
+                        <div class="image-name">X-Quang Ngực</div>
+                        <div class="image-details">
+                            <i class="fas fa-user-injured"></i>
+                            <span>Bệnh nhân: Nguyễn Văn A</span>
+                        </div>
+                        <div class="image-details">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Chụp: 05/08/2025</span>
+                        </div>
+                    </div>
+                    
+                    <div class="image-card" onclick="viewImage('MRI Não', 'BN-3924')">
+                        <div class="image-name">MRI Não</div>
+                        <div class="image-details">
+                            <i class="fas fa-user-injured"></i>
+                            <span>Bệnh nhân: Trần Thị B</span>
+                        </div>
+                        <div class="image-details">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Chụp: 04/09/2025</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Upload Section -->
+                <div class="upload-section" onclick="openUploadModal()">
+                    <div class="upload-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                    <div class="upload-text">Tải ảnh JPG lên</div>
+                    <div class="upload-hint">Nhấn để thêm hình ảnh mới</div>
+                </div>
+                <input type="file" id="file-input" accept=".jpg,.jpeg" onchange="handleFileSelect(event)">
+            </div>
+            
+            <!-- Image Display -->
+            <div class="image-display">
+                <div class="viewer-header">
+                    <div class="current-image">
+                        <i class="fas fa-x-ray"></i>
+                        <span id="current-image">X-Quang Ngực</span>
+                    </div>
+                    
+                    <div class="image-tags">
+                        <div class="image-tag">
+                            <i class="fas fa-file-image"></i>
+                            <span>Định dạng: JPG</span>
+                        </div>
+                        <div class="image-tag">
+                            <i class="fas fa-id-card"></i>
+                            <span>Bệnh nhân: BN-4818</span>
+                        </div>
+                        <div class="image-tag">
+                            <i class="fas fa-expand-alt"></i>
+                            <span>Kích thước: 800×600</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="image-content">
+                    <img id="image-preview" class="image-preview" src="https://images.unsplash.com/photo-1581595219319-5b8b3310fce3?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=600&w=800" alt="X-Quang Ngực">
+                    <div class="placeholder-content">
+                        <i class="fas fa-medkit"></i>
+                        <h3>Trình xem hình ảnh y tế</h3>
+                        <p>Chọn hình ảnh từ danh sách bên trái hoặc tải lên hình ảnh mới</p>
+                    </div>
+                </div>
+                
+                <div class="image-controls">
+                    <div class="tools-header" onclick="toggleTools()">
+                        <div class="tools-title">
+                            <i class="fas fa-tools"></i>
+                            Công cụ xem ảnh
+                        </div>
+                        <div class="toggle-tools" id="toggle-tools">
+                            <i class="fas fa-chevron-up"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="tools-grid" id="tools-grid">
+                        <div class="tool-btn" onclick="adjustZoom(1.2)">
+                            <div class="tool-icon">
+                                <i class="fas fa-search-plus"></i>
+                            </div>
+                            <div class="tool-name">Phóng to</div>
+                        </div>
+                        
+                        <div class="tool-btn" onclick="adjustZoom(0.8)">
+                            <div class="tool-icon">
+                                <i class="fas fa-search-minus"></i>
+                            </div>
+                            <div class="tool-name">Thu nhỏ</div>
+                        </div>
+                        
+                        <div class="tool-btn" onclick="rotateImage(90)">
+                            <div class="tool-icon">
+                                <i class="fas fa-rotate-right"></i>
+                            </div>
+                            <div class="tool-name">Xoay phải</div>
+                        </div>
+                        
+                        <div class="tool-btn" onclick="rotateImage(-90)">
+                            <div class="tool-icon">
+                                <i class="fas fa-rotate-left"></i>
+                            </div>
+                            <div class="tool-name">Xoay trái</div>
+                        </div>
+                        
+                        <div class="tool-btn" onclick="toggleContrast()">
+                            <div class="tool-icon">
+                                <i class="fas fa-adjust"></i>
+                            </div>
+                            <div class="tool-name">Tương phản</div>
+                        </div>
+                        
+                        <div class="tool-btn" onclick="resetImage()">
+                            <div class="tool-icon">
+                                <i class="fas fa-sync"></i>
+                            </div>
+                            <div class="tool-name">Đặt lại</div>
+                        </div>
+                        
+                        <div class="tool-btn" onclick="downloadImage()">
+                            <div class="tool-icon">
+                                <i class="fas fa-download"></i>
+                            </div>
+                            <div class="tool-name">Tải xuống</div>
+                        </div>
+                        
+                        <div class="tool-btn" onclick="printImage()">
+                            <div class="tool-icon">
+                                <i class="fas fa-print"></i>
+                            </div>
+                            <div class="tool-name">In ảnh</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Upload Modal -->
+    <div class="modal" id="upload-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-cloud-upload-alt"></i> Tải ảnh JPG lên</h2>
+            </div>
+            <div class="modal-body">
+                <div class="upload-area" onclick="document.getElementById('modal-file-input').click()">
+                    <i class="fas fa-file-image"></i>
+                    <p>Kéo và thả file JPG vào đây</p>
+                    <p>hoặc</p>
+                    <p class="upload-text">Chọn file từ máy tính</p>
+                    <p class="upload-hint">Chỉ chấp nhận file .jpg hoặc .jpeg</p>
+                </div>
+                <div class="file-info" id="file-info">
+                    <div class="file-name" id="file-name">Không có file nào được chọn</div>
+                    <div class="file-size" id="file-size">Vui lòng chọn file JPG</div>
+                </div>
+                <input type="file" id="modal-file-input" accept=".jpg,.jpeg" onchange="handleModalFileSelect(event)" style="display: none;">
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn btn-secondary" onclick="closeUploadModal()">Huỷ</button>
+                <button class="modal-btn btn-primary" onclick="uploadImageFile()">Tải lên</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Biến toàn cục để theo dõi trạng thái ảnh
+        let currentRotation = 0;
+        let currentZoom = 1;
+        let highContrast = false;
+        let toolsExpanded = true;
+        let uploadedImages = [];
+        
+        // Hàm hiển thị hình ảnh
+        function viewImage(title, patientId) {
+            // Ẩn placeholder
+            document.querySelector('.placeholder-content').style.display = 'none';
+            
+            // Hiển thị ảnh
+            const imgPreview = document.getElementById('image-preview');
+            imgPreview.style.display = 'block';
+            
+            // Cập nhật tiêu đề
+            document.getElementById('current-image').textContent = title;
+            
+            // Cập nhật tags
+            const tagsContainer = document.querySelector('.image-tags');
+            
+            if (title === "X-Quang Ngực") {
+                tagsContainer.innerHTML = `
+                    <div class="image-tag">
+                        <i class="fas fa-file-image"></i>
+                        <span>Định dạng: JPG</span>
+                    </div>
+                    <div class="image-tag">
+                        <i class="fas fa-id-card"></i>
+                        <span>Bệnh nhân: BN-4818</span>
+                    </div>
+                    <div class="image-tag">
+                        <i class="fas fa-expand-alt"></i>
+                        <span>Kích thước: 800×600</span>
+                    </div>
+                `;
+            } else if (title === "MRI Não") {
+                tagsContainer.innerHTML = `
+                    <div class="image-tag">
+                        <i class="fas fa-file-image"></i>
+                        <span>Định dạng: JPG</span>
+                    </div>
+                    <div class="image-tag">
+                        <i class="fas fa-id-card"></i>
+                        <span>Bệnh nhân: BN-3924</span>
+                    </div>
+                    <div class="image-tag">
+                        <i class="fas fa-expand-alt"></i>
+                        <span>Kích thước: 800×600</span>
+                    </div>
+                `;
+            } else {
+                // Cho ảnh tải lên
+                const imgInfo = uploadedImages.find(img => img.title === title);
+                if (imgInfo) {
+                    tagsContainer.innerHTML = `
+                        <div class="image-tag">
+                            <i class="fas fa-file-image"></i>
+                            <span>Định dạng: JPG</span>
+                        </div>
+                        <div class="image-tag">
+                            <i class="fas fa-id-card"></i>
+                            <span>Bệnh nhân: ${imgInfo.patientId}</span>
+                        </div>
+                        <div class="image-tag">
+                            <i class="fas fa-expand-alt"></i>
+                            <span>Kích thước: ${imgInfo.width}×${imgInfo.height}</span>
+                        </div>
+                    `;
+                }
+            }
+            
+            // Cập nhật active card
+            const cards = document.querySelectorAll('.image-card');
+            cards.forEach(card => card.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            // Áp dụng các hiệu ứng hiện tại
+            updateImageEffects();
+        }
+        
+        // Hàm chuyển đổi trạng thái công cụ
+        function toggleTools() {
+            toolsExpanded = !toolsExpanded;
+            const toolsGrid = document.getElementById('tools-grid');
+            const toggleIcon = document.querySelector('#toggle-tools i');
+            
+            if (toolsExpanded) {
+                toolsGrid.classList.remove('collapsed');
+                toggleIcon.className = 'fas fa-chevron-up';
+            } else {
+                toolsGrid.classList.add('collapsed');
+                toggleIcon.className = 'fas fa-chevron-down';
+            }
+        }
+        
+        // Hàm cập nhật hiệu ứng ảnh
+        function updateImageEffects() {
+            const imgPreview = document.getElementById('image-preview');
+            imgPreview.style.transform = `rotate(${currentRotation}deg) scale(${currentZoom})`;
+            imgPreview.style.filter = highContrast ? 'contrast(200%)' : 'contrast(100%)';
+        }
+        
+        // Công cụ chỉnh sửa hình ảnh
+        function adjustZoom(factor) {
+            currentZoom *= factor;
+            updateImageEffects();
+        }
+        
+        function rotateImage(degrees) {
+            currentRotation += degrees;
+            updateImageEffects();
+        }
+        
+        function toggleContrast() {
+            highContrast = !highContrast;
+            updateImageEffects();
+        }
+        
+        function resetImage() {
+            currentRotation = 0;
+            currentZoom = 1;
+            highContrast = false;
+            updateImageEffects();
+        }
+        
+        function downloadImage() {
+            alert('Chức năng tải xuống đã được kích hoạt!');
+        }
+        
+        function printImage() {
+            alert('Chức năng in ảnh đã được kích hoạt!');
+        }
+        
+        // Hàm mở modal tải ảnh lên
+        function openUploadModal() {
+            document.getElementById('upload-modal').style.display = 'flex';
+        }
+        
+        // Hàm đóng modal
+        function closeUploadModal() {
+            document.getElementById('upload-modal').style.display = 'none';
+            document.getElementById('file-info').style.display = 'none';
+            document.getElementById('modal-file-input').value = '';
+        }
+        
+        // Xử lý khi chọn file trong modal
+        function handleModalFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const fileName = file.name;
+                const fileSize = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
+                
+                document.getElementById('file-name').textContent = fileName;
+                document.getElementById('file-size').textContent = fileSize;
+                document.getElementById('file-info').style.display = 'block';
+            }
+        }
+        
+        // Hàm tải file ảnh lên
+        function uploadImageFile() {
+            const fileInput = document.getElementById('modal-file-input');
+            if (!fileInput.files.length) {
+                showNotification('Vui lòng chọn file JPG trước khi tải lên!', 'error');
+                return;
+            }
+            
+            const file = fileInput.files[0];
+            const fileName = file.name;
+            const fileExtension = fileName.split('.').pop().toLowerCase();
+            
+            if (fileExtension !== 'jpg' && fileExtension !== 'jpeg') {
+                showNotification('Vui lòng chọn file JPG (.jpg hoặc .jpeg)!', 'error');
+                return;
+            }
+            
+            // Tạo một đối tượng hình ảnh mới
+            const img = new Image();
+            img.onload = function() {
+                const newImage = {
+                    title: fileName.split('.')[0],
+                    patientId: 'BN-' + Math.floor(1000 + Math.random() * 9000),
+                    width: this.width,
+                    height: this.height,
+                    date: new Date().toLocaleDateString('vi-VN'),
+                    url: URL.createObjectURL(file)
+                };
+                
+                uploadedImages.push(newImage);
+                
+                // Thêm vào danh sách
+                addImageCard(newImage);
+                
+                // Hiển thị thông báo thành công
+                showNotification('Tải lên thành công! Ảnh đã được thêm vào danh sách.', 'success');
+                
+                // Đóng modal
+                closeUploadModal();
+            };
+            img.src = URL.createObjectURL(file);
+        }
+        
+        // Thêm card hình ảnh mới vào danh sách
+        function addImageCard(image) {
+            const imageGrid = document.querySelector('.image-grid');
+            
+            const card = document.createElement('div');
+            card.className = 'image-card';
+            card.onclick = function() {
+                viewImage(image.title, image.patientId);
+                document.getElementById('image-preview').src = image.url;
+            };
+            
+            card.innerHTML = `
+                <div class="image-name">${image.title}</div>
+                <div class="image-details">
+                    <i class="fas fa-user-injured"></i>
+                    <span>Bệnh nhân: ${image.patientId}</span>
+                </div>
+                <div class="image-details">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Tải lên: ${image.date}</span>
+                </div>
+            `;
+            
+            // Thêm vào đầu danh sách
+            imageGrid.insertBefore(card, imageGrid.firstChild);
+            
+            // Chọn hình ảnh vừa tải lên
+            setTimeout(() => {
+                card.click();
+            }, 300);
+        }
+        
+        // Hiển thị thông báo
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            
+            if (type === 'success') {
+                notification.innerHTML = `
+                    <i class="fas fa-check-circle"></i>
+                    <span>${message}</span>
+                `;
+                notification.style.background = '#4BB543';
+            } else {
+                notification.innerHTML = `
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span>${message}</span>
+                `;
+                notification.style.background = '#dc3545';
+            }
+            
+            document.body.appendChild(notification);
+            
+            // Hiển thị thông báo
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 10);
+            
+            // Tự động ẩn sau 3 giây
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => {
+                    notification.remove();
+                }, 300);
+            }, 3000);
+        }
+        
+        // Khởi tạo trang
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tự động chọn hình ảnh đầu tiên
+            document.querySelector('.image-card').click();
+        });
+        
+        // Đóng modal khi click bên ngoài
+        window.onclick = function(event) {
+            const modal = document.getElementById('upload-modal');
+            if (event.target === modal) {
+                closeUploadModal();
+            }
+        };
+    </script>
+</body>
+</html>

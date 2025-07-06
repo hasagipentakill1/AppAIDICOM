@@ -1,0 +1,34 @@
+<!-- templates/nurse/xem-ho-so.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Danh sách bệnh án</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <style>
+        .record-card {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+<h2>📋 Hồ sơ bệnh án đã ghi</h2>
+
+<div th:each="benhAn : ${dsBenhAn}" class="record-card">
+    <p><strong>Họ tên:</strong> <span th:text="${benhAn.hoTen}"></span></p>
+    <p><strong>Giới tính:</strong> <span th:text="${benhAn.gioiTinh}"></span></p>
+    <p><strong>Ngày sinh:</strong> <span th:text="${benhAn.ngaySinh}"></span></p>
+    <p><strong>Mạch:</strong> <span th:text="${benhAn.mach}"></span></p>
+    <p><strong>Nhiệt độ:</strong> <span th:text="${benhAn.nhietDo}"></span></p>
+    <p><strong>Huyết áp:</strong> <span th:text="${benhAn.huyetAp}"></span></p>
+    <p><strong>Nhịp thở:</strong> <span th:text="${benhAn.nhipTho}"></span></p>
+    <p><strong>Chiều cao:</strong> <span th:text="${benhAn.chieuCao}"></span></p>
+    <p><strong>Cân nặng:</strong> <span th:text="${benhAn.canNang}"></span></p>
+</div>
+
+<a href="/nurse/record-form">➕ Ghi hồ sơ mới</a>
+</body>
+</html>

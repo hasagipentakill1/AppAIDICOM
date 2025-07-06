@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UMC Care - Nhập Hồ Sơ Bệnh Án</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4a6cf7;
+            --secondary: #6f42c1;
+            --accent: #20c997;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #198754;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7ff 0%, #e6e9ff 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--dark);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--card-shadow);
+        }
+
+        .logo-icon i {
+            font-size: 24px;
+            color: white;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            padding: 8px 15px;
+            border-radius: 50px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            gap: 30px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: white;
+            border-radius: 20px;
+            padding: 25px 0;
+            box-shadow: var(--card-shadow);
+            height: fit-content;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .menu-item {
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            color: #6c757d;
+            border-left: 4px solid transparent;
+        }
+
+        .menu-item:hover {
+            background: rgba(74, 108, 247, 0.05);
+            color: var(--primary);
+            border-left: 4px solid var(--primary);
+        }
+
+        .menu-item.active {
+            background: rgba(74, 108, 247, 0.1);
+            color: var(--primary);
+            border-left: 4px solid var(--primary);
+        }
+
+        .menu-item i {
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Form Section */
+        .form-section {
+            flex: 1;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .patient-id {
+            background: #e9f7ef;
+            color: var(--success);
+            padding: 8px 15px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+            font-size: 14px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: var(--transition);
+            background: #f8fafc;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(74, 108, 247, 0.15);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .form-row .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 20px;
+            padding-top: 25px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .btn {
+            padding: 14px 30px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 5px 15px rgba(111, 66, 193, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(111, 66, 193, 0.4);
+        }
+
+        .btn-outline {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: rgba(74, 108, 247, 0.05);
+        }
+
+        /* Recent Records */
+        .recent-section {
+            width: 300px;
+        }
+
+        .recent-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 25px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .recent-list {
+            list-style: none;
+        }
+
+        .recent-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .recent-item:last-child {
+            border-bottom: none;
+        }
+
+        .recent-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .recent-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .recent-date {
+            font-size: 13px;
+            color: #6c757d;
+        }
+
+        .recent-id {
+            font-size: 12px;
+            background: #e9f7ef;
+            color: var(--success);
+            padding: 3px 8px;
+            border-radius: 50px;
+            align-self: flex-start;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .recent-section {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <div class="logo-text">UMC Care</div>
+            </div>
+            
+            <div class="user-info">
+                <div class="user-avatar">NT</div>
+                <div class="user-details">
+                    <div class="user-name">Y tá Ngọc</div>
+                    <div class="user-role">Khoa Nội tổng hợp</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <ul class="sidebar-menu">
+                    <li class="menu-item active">
+                        <i class="fas fa-home"></i>
+                        <span>Trang chủ</span>
+                    </li>
+                    <li class="menu-item">
+                        <i class="fas fa-calendar-check"></i>
+                        <span>Đặt khám</span>
+                    </li>
+                    <li class="menu-item">
+                        <i class="fas fa-file-medical"></i>
+                        <span>Hồ sơ sức khoẻ</span>
+                    </li>
+                    <li class="menu-item">
+                        <i class="fas fa-pills"></i>
+                        <span>Đơn thuốc</span>
+                    </li>
+                    <li class="menu-item">
+                        <i class="fas fa-syringe"></i>
+                        <span>Lịch tiêm chủng</span>
+                    </li>
+                    <li class="menu-item">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Thanh toán viện phí</span>
+                    </li>
+                    <li class="menu-item">
+                        <i class="fas fa-bell"></i>
+                        <span>Đặt lịch uống thuốc</span>
+                    </li>
+                    <li class="menu-item">
+                        <i class="fas fa-file-invoice"></i>
+                        <span>Hoá đơn GTGT</span>
+                    </li>
+                    <li class="menu-item">
+                        <i class="fas fa-headset"></i>
+                        <span>Hỗ trợ</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Form Section -->
+            <div class="form-section">
+                <div class="section-header">
+                    <h1 class="section-title">Nhập Hồ Sơ Bệnh Nhân</h1>
+                    <div class="patient-id">Mã HS: BA-2025-08-001</div>
+                </div>
+                
+                <form>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="hoTen"><i class="fas fa-user"></i> Họ tên</label>
+                            <input type="text" id="hoTen" class="form-control" placeholder="Nhập họ tên đầy đủ" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="gioiTinh"><i class="fas fa-venus-mars"></i> Giới tính</label>
+                            <select id="gioiTinh" class="form-control" required>
+                                <option value="">Chọn giới tính</option>
+                                <option value="nam">Nam</option>
+                                <option value="nu">Nữ</option>
+                                <option value="khac">Khác</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="ngaySinh"><i class="fas fa-birthday-cake"></i> Ngày sinh</label>
+                            <input type="date" id="ngaySinh" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="maBenhNhan"><i class="fas fa-id-card"></i> Mã bệnh nhân</label>
+                            <input type="text" id="maBenhNhan" class="form-control" placeholder="Mã BN tự động">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="ngayKham"><i class="fas fa-calendar-day"></i> Ngày khám</label>
+                            <input type="date" id="ngayKham" class="form-control">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="lyDoKham"><i class="fas fa-stethoscope"></i> Lý do khám</label>
+                            <input type="text" id="lyDoKham" class="form-control" placeholder="Nhập lý do khám">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="chanDoanSoBo"><i class="fas fa-diagnoses"></i> Chẩn đoán sơ bộ</label>
+                            <input type="text" id="chanDoanSoBo" class="form-control" placeholder="Chẩn đoán sơ bộ">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="bacSiPhuTrach"><i class="fas fa-user-md"></i> Bác sĩ phụ trách</label>
+                            <select id="bacSiPhuTrach" class="form-control">
+                                <option value="">Chọn bác sĩ</option>
+                                <option value="bs1">BS. Trần Văn A</option>
+                                <option value="bs2">BS. Nguyễn Thị B</option>
+                                <option value="bs3">BS. Lê Văn C</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <h3 style="margin: 30px 0 20px; color: var(--primary);">Thông số sức khoẻ</h3>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="mach"><i class="fas fa-heartbeat"></i> Mạch (bpm)</label>
+                            <input type="number" id="mach" class="form-control" placeholder="70">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="nhietDo"><i class="fas fa-thermometer-half"></i> Nhiệt độ (°C)</label>
+                            <input type="number" id="nhietDo" class="form-control" placeholder="36.5">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="huyetAp"><i class="fas fa-tachometer-alt"></i> Huyết áp (mmHg)</label>
+                            <input type="text" id="huyetAp" class="form-control" placeholder="120/80">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="nhipTho"><i class="fas fa-lungs"></i> Nhịp thở (lần/phút)</label>
+                            <input type="number" id="nhipTho" class="form-control" placeholder="16">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="chieuCao"><i class="fas fa-text-height"></i> Chiều cao (cm)</label>
+                            <input type="number" id="chieuCao" class="form-control" placeholder="170">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="canNang"><i class="fas fa-weight"></i> Cân nặng (kg)</label>
+                            <input type="number" id="canNang" class="form-control" placeholder="65">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="bmi"><i class="fas fa-calculator"></i> BMI</label>
+                            <input type="text" id="bmi" class="form-control" placeholder="22.5" disabled>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="nhipTim"><i class="fas fa-heart"></i> Nhịp tim (bpm)</label>
+                            <input type="number" id="nhipTim" class="form-control" placeholder="72">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ghiChu"><i class="fas fa-notes-medical"></i> Ghi chú thêm</label>
+                        <textarea id="ghiChu" class="form-control" placeholder="Nhập ghi chú bổ sung..."></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="reset" class="btn btn-outline">
+                            <i class="fas fa-redo"></i> Nhập lại
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Lưu hồ sơ
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Recent Records -->
+            <div class="recent-section">
+                <div class="recent-card">
+                    <h3 class="card-title"><i class="fas fa-history"></i> Hồ sơ gần đây</h3>
+                    <ul class="recent-list">
+                        <li class="recent-item">
+                            <div class="recent-info">
+                                <div class="recent-name">Nguyễn Văn An</div>
+                                <div class="recent-date">05/08/2025 - Khám nội</div>
+                            </div>
+                            <div class="recent-id">BA-001</div>
+                        </li>
+                        <li class="recent-item">
+                            <div class="recent-info">
+                                <div class="recent-name">Trần Thị Bình</div>
+                                <div class="recent-date">04/08/2025 - Khám nhi</div>
+                            </div>
+                            <div class="recent-id">BA-002</div>
+                        </li>
+                        <li class="recent-item">
+                            <div class="recent-info">
+                                <div class="recent-name">Lê Hoàng Công</div>
+                                <div class="recent-date">04/08/2025 - Tiêm chủng</div>
+                            </div>
+                            <div class="recent-id">BA-003</div>
+                        </li>
+                        <li class="recent-item">
+                            <div class="recent-info">
+                                <div class="recent-name">Phạm Thị Diệu</div>
+                                <div class="recent-date">03/08/2025 - Khám tổng quát</div>
+                            </div>
+                            <div class="recent-id">BA-004</div>
+                        </li>
+                        <li class="recent-item">
+                            <div class="recent-info">
+                                <div class="recent-name">Vũ Minh Đức</div>
+                                <div class="recent-date">02/08/2025 - Tái khám</div>
+                            </div>
+                            <div class="recent-id">BA-005</div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="recent-card">
+                    <h3 class="card-title"><i class="fas fa-bell"></i> Thông báo</h3>
+                    <ul class="recent-list">
+                        <li class="recent-item">
+                            <div class="recent-info">
+                                <div class="recent-name">Họp khoa định kỳ</div>
+                                <div class="recent-date">10/08/2025 - 14:00</div>
+                            </div>
+                        </li>
+                        <li class="recent-item">
+                            <div class="recent-info">
+                                <div class="recent-name">Cập nhật phần mềm</div>
+                                <div class="recent-date">Hoàn tất trước 15/08</div>
+                            </div>
+                        </li>
+                        <li class="recent-item">
+                            <div class="recent-info">
+                                <div class="recent-name">Đào tạo an toàn thông tin</div>
+                                <div class="recent-date">20/08/2025 - 8:30</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Tính BMI tự động
+        document.addEventListener('DOMContentLoaded', function() {
+            const heightInput = document.getElementById('chieuCao');
+            const weightInput = document.getElementById('canNang');
+            const bmiInput = document.getElementById('bmi');
+            
+            function calculateBMI() {
+                if (heightInput.value && weightInput.value) {
+                    const height = heightInput.value / 100; // chuyển cm sang m
+                    const weight = weightInput.value;
+                    const bmi = (weight / (height * height)).toFixed(1);
+                    bmiInput.value = bmi;
+                } else {
+                    bmiInput.value = '';
+                }
+            }
+            
+            heightInput.addEventListener('input', calculateBMI);
+            weightInput.addEventListener('input', calculateBMI);
+        });
+    </script>
+</body>
+</html>

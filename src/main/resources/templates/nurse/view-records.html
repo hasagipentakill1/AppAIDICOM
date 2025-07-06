@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UMC Care - Xem Hồ Sơ Bệnh Án</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4a6cf7;
+            --secondary: #6f42c1;
+            --accent: #20c997;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7ff 0%, #e6e9ff 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--dark);
+        }
+
+        .container {
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 0 0 20px 20px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            background: rgba(255, 255, 255, 0.2);
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+
+        .logo-icon i {
+            font-size: 24px;
+            color: white;
+        }
+
+        .logo-text {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+            backdrop-filter: blur(5px);
+        }
+
+        .user-details {
+            text-align: right;
+        }
+
+        .user-name {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .user-role {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Navigation */
+        .nav-tabs {
+            display: flex;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 30px;
+        }
+
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            padding: 20px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+
+        .nav-item:not(.active):hover {
+            background: #f0f5ff;
+        }
+
+        /* Records Section */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 50px;
+            padding: 10px 20px;
+            box-shadow: var(--card-shadow);
+            width: 300px;
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            flex: 1;
+            padding: 8px;
+            font-size: 16px;
+        }
+
+        .search-box i {
+            color: var(--primary);
+            font-size: 20px;
+        }
+
+        /* Records Grid */
+        .records-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .record-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .record-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px;
+            position: relative;
+        }
+
+        .record-id {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 14px;
+        }
+
+        .patient-name {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .patient-info {
+            display: flex;
+            gap: 15px;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .record-detail {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .detail-label {
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            text-align: right;
+        }
+
+        .vital-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #6c757d;
+        }
+
+        .card-footer {
+            display: flex;
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .card-action {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+
+        .view-details {
+            color: var(--primary);
+        }
+
+        .view-details:hover {
+            background: rgba(74, 108, 247, 0.1);
+        }
+
+        .delete-record {
+            color: var(--danger);
+        }
+
+        .delete-record:hover {
+            background: rgba(220, 53, 69, 0.1);
+        }
+
+        /* Record Detail Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 1000px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 25px 30px;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .modal-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .modal-subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 25px;
+            right: 25px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 20px;
+            transition: var(--transition);
+        }
+
+        .close-modal:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+
+        .detail-section {
+            margin-bottom: 25px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f5ff;
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: #f0f5ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 18px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .detail-row {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .detail-value {
+            background: #f8f9fa;
+            padding: 12px 15px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        .vitals-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .vital-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .vital-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 10px 0;
+        }
+
+        .vital-label {
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .empty-icon {
+            font-size: 80px;
+            color: #e9ecef;
+            margin-bottom: 20px;
+        }
+
+        .empty-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #6c757d;
+        }
+
+        .empty-description {
+            font-size: 16px;
+            color: #6c757d;
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+
+        .btn {
+            padding: 14px 30px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 5px 15px rgba(111, 66, 193, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(111, 66, 193, 0.4);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .vitals-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+                padding: 20px;
+            }
+            
+            .user-details {
+                text-align: center;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .records-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .vitals-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-heartbeat"></i>
+                </div>
+                <div class="logo-text">UMC Care</div>
+            </div>
+            
+            <div class="user-info">
+                <div class="user-avatar">YT</div>
+                <div class="user-details">
+                    <div class="user-name">Y tá Ngọc Anh</div>
+                    <div class="user-role">Khoa Nội tổng hợp</div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Navigation -->
+        <div class="nav-tabs">
+            <div class="nav-item">
+                <i class="fas fa-home"></i>
+                Trang chủ
+            </div>
+            <div class="nav-item active">
+                <i class="fas fa-file-medical"></i>
+                Xem hồ sơ bệnh án
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-edit"></i>
+                Ghi hồ sơ bệnh án
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-calendar-check"></i>
+                Lịch hẹn khám
+            </div>
+        </div>
+        
+        <!-- Records Section -->
+        <div class="section-header">
+            <h1 class="section-title">
+                <i class="fas fa-file-medical-alt"></i>
+                Danh sách hồ sơ bệnh án
+            </h1>
+            
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Tìm kiếm hồ sơ...">
+            </div>
+        </div>
+        
+        <!-- Records Grid -->
+        <div class="records-grid" id="records-grid">
+            <!-- Cards will be generated by JavaScript -->
+        </div>
+        
+        <!-- Empty State -->
+        <div class="empty-state" id="empty-state" style="display: none;">
+            <div class="empty-icon">
+                <i class="fas fa-file-medical"></i>
+            </div>
+            <h2 class="empty-title">Chưa có hồ sơ bệnh án nào</h2>
+            <p class="empty-description">Hiện tại chưa có hồ sơ bệnh án nào được lưu trữ. Vui lòng ghi hồ sơ bệnh án mới hoặc kiểm tra lại sau.</p>
+            <button class="btn btn-primary">
+                <i class="fas fa-plus"></i>
+                Ghi hồ sơ mới
+            </button>
+        </div>
+    </div>
+    
+    <!-- Record Detail Modal -->
+    <div class="modal" id="record-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="close-modal" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </div>
+                <h2 class="modal-title" id="modal-name">Nguyễn Văn A</h2>
+                <div class="modal-subtitle">
+                    <span id="modal-id">Mã HS: BA-2025-08-001</span> • 
+                    <span id="modal-date">Ngày khám: 05/08/2025</span>
+                </div>
+            </div>
+            
+            <div class="modal-body">
+                <div class="detail-grid">
+                    <div class="detail-section">
+                        <div class="section-header">
+                            <div class="section-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <h3 class="section-title">Thông tin cá nhân</h3>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <div class="detail-label">Họ tên:</div>
+                            <div class="detail-value" id="info-name">Nguyễn Văn A</div>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <div class="detail-label">Giới tính:</div>
+                            <div class="detail-value" id="info-gender">Nam</div>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <div class="detail-label">Ngày sinh:</div>
+                            <div class="detail-value" id="info-dob">15/04/1985</div>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <div class="detail-label">Mã bệnh nhân:</div>
+                            <div class="detail-value" id="info-patient-id">BN-0452</div>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <div class="section-header">
+                            <div class="section-icon">
+                                <i class="fas fa-stethoscope"></i>
+                            </div>
+                            <h3 class="section-title">Thông tin khám bệnh</h3>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <div class="detail-label">Ngày khám:</div>
+                            <div class="detail-value" id="info-visit-date">05/08/2025</div>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <div class="detail-label">Lý do khám:</div>
+                            <div class="detail-value" id="info-reason">Đau đầu, chóng mặt</div>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <div class="detail-label">Chẩn đoán sơ bộ:</div>
+                            <div class="detail-value" id="info-diagnosis">Huyết áp cao</div>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <div class="detail-label">Bác sĩ phụ trách:</div>
+                            <div class="detail-value" id="info-doctor">BS. Trần Văn B</div>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <div class="section-header">
+                            <div class="section-icon">
+                                <i class="fas fa-heartbeat"></i>
+                            </div>
+                            <h3 class="section-title">Chỉ số sức khỏe</h3>
+                        </div>
+                        
+                        <div class="vitals-grid">
+                            <div class="vital-card">
+                                <i class="fas fa-heartbeat"></i>
+                                <div class="vital-value" id="vital-pulse">75</div>
+                                <div class="vital-label">Mạch (bpm)</div>
+                            </div>
+                            
+                            <div class="vital-card">
+                                <i class="fas fa-thermometer-half"></i>
+                                <div class="vital-value" id="vital-temp">36.8</div>
+                                <div class="vital-label">Nhiệt độ (°C)</div>
+                            </div>
+                            
+                            <div class="vital-card">
+                                <i class="fas fa-tachometer-alt"></i>
+                                <div class="vital-value" id="vital-bp">120/80</div>
+                                <div class="vital-label">Huyết áp (mmHg)</div>
+                            </div>
+                            
+                            <div class="vital-card">
+                                <i class="fas fa-lungs"></i>
+                                <div class="vital-value" id="vital-resp">16</div>
+                                <div class="vital-label">Nhịp thở (lần/phút)</div>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <div class="detail-label">Chiều cao:</div>
+                            <div class="detail-value" id="info-height">172 cm</div>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <div class="detail-label">Cân nặng:</div>
+                            <div class="detail-value" id="info-weight">68 kg</div>
+                        </div>
+                        
+                        <div class="detail-row">
+                            <div class="detail-label">BMI:</div>
+                            <div class="detail-value" id="info-bmi">23.0</div>
+                        </div>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <div class="section-header">
+                            <div class="section-icon">
+                                <i class="fas fa-notes-medical"></i>
+                            </div>
+                            <h3 class="section-title">Ghi chú</h3>
+                        </div>
+                        
+                        <div class="detail-value" id="info-notes" style="min-height: 150px;">
+                            Bệnh nhân có tiền sử huyết áp cao, cần theo dõi huyết áp hàng ngày. Kê đơn thuốc hạ huyết áp và hẹn tái khám sau 1 tuần.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Sample medical records data
+        const medicalRecords = [
+            {
+                id: "BA-2025-08-001",
+                name: "Nguyễn Văn A",
+                gender: "Nam",
+                dob: "15/04/1985",
+                patientId: "BN-0452",
+                visitDate: "05/08/2025",
+                reason: "Đau đầu, chóng mặt",
+                diagnosis: "Huyết áp cao",
+                doctor: "BS. Trần Văn B",
+                pulse: 75,
+                temp: 36.8,
+                bp: "120/80",
+                resp: 16,
+                height: 172,
+                weight: 68,
+                bmi: 23.0,
+                notes: "Bệnh nhân có tiền sử huyết áp cao, cần theo dõi huyết áp hàng ngày. Kê đơn thuốc hạ huyết áp và hẹn tái khám sau 1 tuần."
+            },
+            {
+                id: "BA-2025-08-002",
+                name: "Trần Thị B",
+                gender: "Nữ",
+                dob: "22/11/1992",
+                patientId: "BN-0783",
+                visitDate: "04/08/2025",
+                reason: "Ho, sốt, khó thở",
+                diagnosis: "Viêm phế quản cấp",
+                doctor: "BS. Lê Thị C",
+                pulse: 85,
+                temp: 38.2,
+                bp: "110/70",
+                resp: 20,
+                height: 160,
+                weight: 55,
+                bmi: 21.5,
+                notes: "Bệnh nhân có dấu hiệu nhiễm trùng đường hô hấp trên. Kê đơn thuốc kháng sinh và hạ sốt. Hướng dẫn nghỉ ngơi, uống nhiều nước."
+            },
+            {
+                id: "BA-2025-08-003",
+                name: "Lê Văn C",
+                gender: "Nam",
+                dob: "30/07/1978",
+                patientId: "BN-0921",
+                visitDate: "03/08/2025",
+                reason: "Đau thắt ngực",
+                diagnosis: "Cơn đau thắt ngực không ổn định",
+                doctor: "BS. Nguyễn Văn D",
+                pulse: 90,
+                temp: 37.0,
+                bp: "140/90",
+                resp: 18,
+                height: 175,
+                weight: 80,
+                bmi: 26.1,
+                notes: "Bệnh nhân có tiền sử bệnh tim mạch. Yêu cầu nhập viện để theo dõi và làm các xét nghiệm chuyên sâu."
+            }
+        ];
+        
+        // Function to generate record cards
+        function generateRecordCards() {
+            const grid = document.getElementById('records-grid');
+            const emptyState = document.getElementById('empty-state');
+            
+            if (medicalRecords.length === 0) {
+                grid.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            grid.innerHTML = '';
+            
+            medicalRecords.forEach(record => {
+                const card = document.createElement('div');
+                card.className = 'record-card';
+                card.innerHTML = `
+                    <div class="card-header">
+                        <div class="record-id">${record.id}</div>
+                        <div class="patient-name">${record.name}</div>
+                        <div class="patient-info">
+                            <span>${record.gender}, ${record.dob}</span>
+                            <span>Mã BN: ${record.patientId}</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="record-detail">
+                            <div class="detail-label">Ngày khám</div>
+                            <div class="detail-value">${record.visitDate}</div>
+                        </div>
+                        <div class="record-detail">
+                            <div class="detail-label">Lý do khám</div>
+                            <div class="detail-value">${record.reason}</div>
+                        </div>
+                        <div class="record-detail">
+                            <div class="detail-label">Chẩn đoán</div>
+                            <div class="detail-value">${record.diagnosis}</div>
+                        </div>
+                        <div class="vital-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">${record.pulse}</div>
+                                <div class="stat-label">Mạch</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">${record.temp}°C</div>
+                                <div class="stat-label">Nhiệt độ</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">${record.bp}</div>
+                                <div class="stat-label">Huyết áp</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-action view-details" data-id="${record.id}">
+                            <i class="fas fa-eye"></i>
+                            Xem chi tiết
+                        </div>
+                        <div class="card-action delete-record" data-id="${record.id}">
+                            <i class="fas fa-trash"></i>
+                            Xóa
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            
+            // Add event listeners
+            document.querySelectorAll('.view-details').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const recordId = this.getAttribute('data-id');
+                    showRecordDetails(recordId);
+                });
+            });
+            
+            document.querySelectorAll('.delete-record').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const recordId = this.getAttribute('data-id');
+                    deleteRecord(recordId);
+                });
+            });
+        }
+        
+        // Function to show record details
+        function showRecordDetails(recordId) {
+            const record = medicalRecords.find(r => r.id === recordId);
+            if (!record) return;
+            
+            // Populate modal with record data
+            document.getElementById('modal-name').textContent = record.name;
+            document.getElementById('modal-id').textContent = `Mã HS: ${record.id}`;
+            document.getElementById('modal-date').textContent = `Ngày khám: ${record.visitDate}`;
+            
+            document.getElementById('info-name').textContent = record.name;
+            document.getElementById('info-gender').textContent = record.gender;
+            document.getElementById('info-dob').textContent = record.dob;
+            document.getElementById('info-patient-id').textContent = record.patientId;
+            
+            document.getElementById('info-visit-date').textContent = record.visitDate;
+            document.getElementById('info-reason').textContent = record.reason;
+            document.getElementById('info-diagnosis').textContent = record.diagnosis;
+            document.getElementById('info-doctor').textContent = record.doctor;
+            
+            document.getElementById('vital-pulse').textContent = record.pulse;
+            document.getElementById('vital-temp').textContent = record.temp;
+            document.getElementById('vital-bp').textContent = record.bp;
+            document.getElementById('vital-resp').textContent = record.resp;
+            
+            document.getElementById('info-height').textContent = `${record.height} cm`;
+            document.getElementById('info-weight').textContent = `${record.weight} kg`;
+            document.getElementById('info-bmi').textContent = record.bmi;
+            
+            document.getElementById('info-notes').textContent = record.notes;
+            
+            // Show modal
+            document.getElementById('record-modal').style.display = 'flex';
+        }
+        
+        // Function to close modal
+        function closeModal() {
+            document.getElementById('record-modal').style.display = 'none';
+        }
+        
+        // Function to delete record
+        function deleteRecord(recordId) {
+            if (confirm('Bạn có chắc chắn muốn xóa hồ sơ này?')) {
+                const index = medicalRecords.findIndex(r => r.id === recordId);
+                if (index !== -1) {
+                    medicalRecords.splice(index, 1);
+                    generateRecordCards();
+                    
+                    // Show notification
+                    showNotification('Hồ sơ đã được xóa thành công!', 'success');
+                }
+            }
+        }
+        
+        // Function to show notification
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.style = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 25px;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                z-index: 2000;
+                background: ${type === 'success' ? '#4BB543' : '#dc3545'};
+                color: white;
+                animation: slideIn 0.3s, fadeOut 0.3s 2.7s;
+            `;
+            
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check' : 'exclamation'}-circle"></i>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Remove notification after 3 seconds
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            generateRecordCards();
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', function(event) {
+                const modal = document.getElementById('record-modal');
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
