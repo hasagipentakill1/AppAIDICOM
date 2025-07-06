@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý Bệnh nhân</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body { background-color: #f8f9fa; }
+        .back-btn { margin-right: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/doctor/home"><i class="bi bi-house-door"></i> Trang chủ</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Quản lý Bệnh nhân</li>
+            </ol>
+        </nav>
+
+        <!-- Page Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="text-primary">
+                <i class="bi bi-people-fill"></i> Quản lý Bệnh nhân
+            </h1>
+            <div>
+                <a href="/doctor/home" class="btn btn-outline-secondary back-btn">
+                    <i class="bi bi-arrow-left"></i> Trở về
+                </a>
+            </div>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Tìm kiếm bệnh nhân..." id="searchInput">
+                            <button class="btn btn-primary" type="button" id="searchBtn">
+                                <i class="bi bi-search"></i> Tìm
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <select class="form-select" id="statusFilter">
+                                <option selected>Lọc theo trạng thái</option>
+                                <option>Tất cả</option>
+                                <option>Đang điều trị</option>
+                                <option>Đã xuất viện</option>
+                                <option>Chờ kết quả</option>
+                            </select>
+                            <button class="btn btn-outline-secondary" type="button" id="filterBtn">
+                                <i class="bi bi-funnel"></i> Lọc
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Patients Table -->
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover" id="patientsTable">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Mã BN</th>
+                                <th>Họ tên</th>
+                                <th>Ngày sinh</th>
+                                <th>Giới tính</th>
+                                <th>Trạng thái</th>
+                                <th>Hình ảnh</th>
+                                <th>Báo cáo</th>
+                                <th>Lần khám cuối</th>
+                                <th>Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="patient : ${patients}">
+                                <td th:text="'BN-' + ${patient.id}"></td>
+                                <td th:text="${patient.name}"></td>
+                                <td th:text="${patient.dateOfBirth}"></td>
+                                <td th:text="${patient.gender}"></td>
+                                <td><span class="badge bg-success">Đang điều trị</span></td>
+                                <td><span class="badge bg-info">3</span></td>
+                                <td><span class="badge bg-secondary">1</span></td>
+                                <td>03/07/2025</td>
+                                <td>
+                                    <a th:href="@{/doctor/patient/{id}(id=${patient.id})}"
+                                       class="btn btn-sm btn-primary me-1">
+                                        <i class="bi bi-eye"></i> Xem
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Pagination -->
+                <nav aria-label="Page navigation" class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Trước</a>
+                        </li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#">Tiếp</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Xử lý tìm kiếm
+            $('#searchBtn').click(function() {
+                const searchText = $('#searchInput').val().toLowerCase();
+                $('#patientsTable tbody tr').each(function() {
+                    const patientName = $(this).find('td:nth-child(2)').text().toLowerCase();
+                    if (patientName.includes(searchText)) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            });
+
+            // Xử lý lọc theo trạng thái
+            $('#filterBtn').click(function() {
+                const filterValue = $('#statusFilter').val();
+                if (filterValue === 'Tất cả') {
+                    $('#patientsTable tbody tr').show();
+                } else {
+                    $('#patientsTable tbody tr').each(function() {
+                        const status = $(this).find('td:nth-child(5) span').text();
+                        if (status === filterValue) {
+                            $(this).show();
+                        } else {
+                            $(this).hide();
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

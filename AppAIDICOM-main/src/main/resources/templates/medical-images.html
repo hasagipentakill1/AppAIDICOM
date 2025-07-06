@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Hình ảnh Y tế</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body { background-color: #f8f9fa; }
+        .image-card {
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .image-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .image-thumbnail {
+            height: 150px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/doctor/home"><i class="bi bi-house-door"></i> Trang chủ</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Hình ảnh Y tế</li>
+            </ol>
+        </nav>
+
+        <!-- Page Header -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="text-secondary">
+                <i class="bi bi-images"></i> Hình ảnh Y tế
+            </h1>
+            <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#uploadImageModal">
+                <i class="bi bi-upload"></i> Tải lên ảnh
+            </button>
+        </div>
+
+        <!-- Filter Options -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="form-label">Bệnh nhân</label>
+                        <select class="form-select">
+                            <option value="">Tất cả bệnh nhân</option>
+                            <option value="1">Nguyễn Văn A (BN-001)</option>
+                            <option value="2">Trần Thị B (BN-002)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Loại ảnh</label>
+                        <select class="form-select">
+                            <option value="">Tất cả loại</option>
+                            <option value="xray">X-quang</option>
+                            <option value="ct">CT Scan</option>
+                            <option value="mri">MRI</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Khoảng thời gian</label>
+                        <select class="form-select">
+                            <option value="">Tất cả</option>
+                            <option value="week">Tuần này</option>
+                            <option value="month">Tháng này</option>
+                            <option value="year">Năm nay</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Images Grid -->
+        <div class="row" id="imageGrid">
+            <div class="col-md-4 mb-4">
+                <div class="card image-card">
+                    <img src="/api/dicom-preview?path=/images/xray1.dcm" class="card-img-top image-thumbnail" alt="X-quang">
+                    <div class="card-body">
+                        <h5 class="card-title">X-quang ngực</h5>
+                        <p class="card-text text-muted small">BN-001 - 03/07/2025</p>
+                        <div class="d-flex justify-content-between">
+                            <button class="btn btn-sm btn-outline-secondary view-btn">
+                                <i class="bi bi-eye"></i> Xem
+                            </button>
+                            <button class="btn btn-sm btn-outline-primary compare-btn">
+                                <i class="bi bi-layers"></i> So sánh
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- More image cards would go here -->
+        </div>
+
+        <!-- Upload Image Modal -->
+        <div class="modal fade" id="uploadImageModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-secondary text-white">
+                        <h5 class="modal-title">Tải lên hình ảnh</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="uploadForm">
+                            <div class="mb-3">
+                                <label class="form-label">Bệnh nhân</label>
+                                <select class="form-select" required>
+                                    <option value="">Chọn bệnh nhân</option>
+                                    <option value="1">Nguyễn Văn A (BN-001)</option>
+                                    <option value="2">Trần Thị B (BN-002)</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Loại ảnh</label>
+                                <select class="form-select" required>
+                                    <option value="">Chọn loại ảnh</option>
+                                    <option value="xray">X-quang</option>
+                                    <option value="ct">CT Scan</option>
+                                    <option value="mri">MRI</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Tệp hình ảnh (DICOM)</label>
+                                <input type="file" class="form-control" accept=".dcm" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Ghi chú</label>
+                                <textarea class="form-control" rows="2"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-primary">Tải lên</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</body>
+</html>

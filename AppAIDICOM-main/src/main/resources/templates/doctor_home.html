@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Trang chủ Bác sĩ</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body { background-color: #f8f9fa; }
+        .dashboard-card {
+            transition: transform 0.3s;
+            height: 100%;
+        }
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .welcome-section {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: white;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-4">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-center mb-5">
+            <h1 class="text-primary">
+                <i class="bi bi-heart-pulse"></i> Hệ thống Quản lý Bác sĩ
+            </h1>
+            <div class="dropdown">
+                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="userMenu"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-person-circle"></i> Dr. Nguyễn Văn A
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="userMenu">
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-person"></i> Hồ sơ</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-gear"></i> Cài đặt</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-right"></i> Đăng xuất</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Welcome Section -->
+        <div class="welcome-section p-4 mb-4">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h2><i class="bi bi-emoji-smile"></i> Xin chào, Dr. Nguyễn Văn A!</h2>
+                    <p class="mb-0">Hôm nay bạn có 5 cuộc hẹn khám bệnh</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <span class="badge bg-light text-dark fs-6">
+                        <i class="bi bi-calendar-check"></i> 03/07/2025
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card text-white bg-primary mb-3 dashboard-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h5 class="card-title">Bệnh nhân</h5>
+                                <h2 class="mb-0">128</h2>
+                            </div>
+                            <i class="bi bi-people-fill fs-1"></i>
+                        </div>
+                        <a href="/doctor/patients" class="stretched-link"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-success mb-3 dashboard-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h5 class="card-title">Cuộc hẹn hôm nay</h5>
+                                <h2 class="mb-0">5</h2>
+                            </div>
+                            <i class="bi bi-calendar-event fs-1"></i>
+                        </div>
+                        <a href="/doctor/appointments" class="stretched-link"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-info mb-3 dashboard-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h5 class="card-title">Hình ảnh cần xem</h5>
+                                <h2 class="mb-0">8</h2>
+                            </div>
+                            <i class="bi bi-images fs-1"></i>
+                        </div>
+                        <a href="/doctor/medical-images" class="stretched-link"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-secondary mb-3 dashboard-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h5 class="card-title">Báo cáo chưa hoàn thành</h5>
+                                <h2 class="mb-0">3</h2>
+                            </div>
+                            <i class="bi bi-file-earmark-text fs-1"></i>
+                        </div>
+                        <a href="/doctor/reports" class="stretched-link"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Functions -->
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="card dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="bi bi-people-fill text-primary fs-1 mb-3"></i>
+                        <h4 class="card-title">Quản lý Bệnh nhân</h4>
+                        <p class="card-text">Xem và quản lý thông tin bệnh nhân</p>
+                        <a href="/doctor/patients" class="btn btn-primary">
+                            <i class="bi bi-arrow-right"></i> Truy cập
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="card dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="bi bi-calendar-check text-success fs-1 mb-3"></i>
+                        <h4 class="card-title">Lịch hẹn</h4>
+                        <p class="card-text">Quản lý lịch hẹn khám bệnh</p>
+                        <a href="/doctor/appointments" class="btn btn-success">
+                            <i class="bi bi-arrow-right"></i> Truy cập
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="card dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="bi bi-file-earmark-text text-info fs-1 mb-3"></i>
+                        <h4 class="card-title">Báo cáo & Kết quả</h4>
+                        <p class="card-text">Xem và tạo báo cáo y tế</p>
+                        <a href="/doctor/reports" class="btn btn-info text-white">
+                            <i class="bi bi-arrow-right"></i> Truy cập
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="card dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="bi bi-prescription2 text-warning fs-1 mb-3"></i>
+                        <h4 class="card-title">Kê đơn thuốc</h4>
+                        <p class="card-text">Tạo và quản lý đơn thuốc</p>
+                        <a href="/doctor/prescriptions" class="btn btn-warning">
+                            <i class="bi bi-arrow-right"></i> Truy cập
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="card dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="bi bi-images text-secondary fs-1 mb-3"></i>
+                        <h4 class="card-title">Hình ảnh y tế</h4>
+                        <p class="card-text">Xem và phân tích hình ảnh DICOM</p>
+                        <a href="/doctor/medical-images" class="btn btn-secondary">
+                            <i class="bi bi-arrow-right"></i> Truy cập
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4 mb-4">
+                <div class="card dashboard-card">
+                    <div class="card-body text-center">
+                        <i class="bi bi-robot text-danger fs-1 mb-3"></i>
+                        <h4 class="card-title">Phân tích AI</h4>
+                        <p class="card-text">Kết quả phân tích từ AI</p>
+                        <a href="/doctor/ai-analysis" class="btn btn-danger">
+                            <i class="bi bi-arrow-right"></i> Truy cập
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activities -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-activity"></i> Hoạt động gần đây</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">Khám bệnh cho BN-0125</h6>
+                            <small>10 phút trước</small>
+                        </div>
+                        <p class="mb-1">Nguyễn Văn B - Đau đầu, chóng mặt</p>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">Tạo báo cáo</h6>
+                            <small>1 giờ trước</small>
+                        </div>
+                        <p class="mb-1">Báo cáo kết quả điều trị BN-0089</p>
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">Phân tích AI</h6>
+                            <small>2 giờ trước</small>
+                        </div>
+                        <p class="mb-1">Kết quả phân tích ảnh X-quang BN-0075</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
