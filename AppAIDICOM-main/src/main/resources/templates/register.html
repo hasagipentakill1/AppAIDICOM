@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Đăng ký / Đăng nhập</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f0f8ff; padding: 20px; }
+        .container { max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #00695c; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; }
+        input, select { width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ccc; }
+        button { padding: 10px 20px; background: #00796b; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #004d40; }
+        .role-buttons, .nav-buttons { text-align: center; margin-bottom: 20px; }
+        .role-buttons button, .nav-buttons button { margin: 5px 10px; }
+        #nurseForm, #doctorForm, #loginForm { display: none; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Đăng ký / Đăng nhập Nhân sự Bệnh viện</h2>
+
+    <div class="nav-buttons">
+        <button onclick="showLoginForm()">Đăng nhập</button>
+        <button onclick="showNurseForm()">Đăng ký Y tá</button>
+        <button onclick="showDoctorForm()">Đăng ký Bác sĩ</button>
+    </div>
+
+    <!-- Form Đăng nhập -->
+    <form id="loginForm" th:action="@{/login}" method="post">
+        <div class="form-group"><label>Email</label><input name="email" type="email" required></div>
+        <div class="form-group"><label>Mật khẩu</label><input name="password" type="password" required></div>
+        <button type="submit">Đăng nhập</button>
+    </form>
+
+    <!-- Form Y tá -->
+    <form id="nurseForm" th:action="@{/register/nurse}" method="post">
+        <div class="form-group"><label>Họ và tên</label><input name="name" type="text" required></div>
+        <div class="form-group"><label>Email</label><input name="email" type="email" required></div>
+        <div class="form-group"><label>Số điện thoại</label><input name="phone" type="tel" required></div>
+        <div class="form-group"><label>Địa chỉ</label><input name="address" type="text" required></div>
+        <div class="form-group"><label>Mật khẩu</label><input name="password" type="password" required></div>
+        <button type="submit">Đăng ký Y tá</button>
+    </form>
+
+    <!-- Form Bác sĩ -->
+    <form id="doctorForm" th:action="@{/register/doctor}" method="post">
+        <div class="form-group"><label>Họ và tên</label><input name="name" type="text" required></div>
+        <div class="form-group"><label>Email</label><input name="email" type="email" required></div>
+        <div class="form-group"><label>Số điện thoại</label><input name="phone" type="tel" required></div>
+        <div class="form-group"><label>Địa chỉ</label><input name="address" type="text" required></div>
+        <div class="form-group"><label>Mật khẩu</label><input name="password" type="password" required></div>
+        <div class="form-group">
+            <label>Chuyên khoa</label>
+            <select name="specialization" required>
+                <option value="">-- Chọn chuyên khoa --</option>
+                <optgroup label="🩺 Chuyên khoa nội khoa">
+<option value="Nội tổng quát">Nội tổng quát</option>
+<option value="Nội tim mạch">Nội tim mạch</option>
+<option value="Nội hô hấp">Nội hô hấp</option>
+<option value="Nội tiết — đái tháo đường">Nội tiết — đái tháo đường</option>
+<option value="Nội thần kinh">Nội thần kinh</option>
+<option value="Nội tiêu hóa — gan mật">Nội tiêu hóa — gan mật</option>
+<option value="Nội thận — tiết niệu">Nội thận — tiết niệu</option>
+<option value="Dị ứng — miễn dịch">Dị ứng — miễn dịch</option>
+<option value="Huyết học">Huyết học</option>
+<option value="Ung bướu (ung thư)">Ung bướu (ung thư)</option>
+<option value="Cơ xương khớp — thấp khớp">Cơ xương khớp — thấp khớp</option>
+</optgroup>
+
+<optgroup label="Chuyên khoa ngoại khoa">
+<option value="Ngoại tổng quát">Ngoại tổng quát</option>
+<option value="Ngoại thần kinh">Ngoại thần kinh</option>
+<option value="Ngoại chấn thương — chỉnh hình">Ngoại chấn thương — chỉnh hình</option>
+<option value="Ngoại tiết niệu">Ngoại tiết niệu</option>
+<option value="Ngoại lồng ngực">Ngoại lồng ngực</option>
+<option value="Ngoại gan mật tụy">Ngoại gan mật tụy</option>
+<option value="Ngoại tiêu hóa">Ngoại tiêu hóa</option>
+<option value="Phẫu thuật thẩm mỹ — tạo hình">Phẫu thuật thẩm mỹ — tạo hình</option>
+<option value="Phẫu thuật mạch máu">Phẫu thuật mạch máu</option>
+</optgroup>
+
+<optgroup label="Các chuyên khoa khác">
+<option value="Chuyên khoa mắt (nhãn khoa)">Chuyên khoa mắt (nhãn khoa)</option>
+<option value="Chuyên khoa tai mũi họng (TMH)">Chuyên khoa tai mũi họng (TMH)</option>
+<option value="Chuyên khoa răng hàm mặt">Chuyên khoa răng hàm mặt</option>
+<option value="Chuyên khoa tâm thần">Chuyên khoa tâm thần</option>
+</optgroup>
+
+<optgroup label="Chuyên khoa nhi khoa">
+<option value="Nhi tổng quát">Nhi tổng quát</option>
+<option value="Nhi hô hấp">Nhi hô hấp</option>
+<option value="Nhi tim mạch">Nhi tim mạch</option>
+<option value="Nhi thần kinh">Nhi thần kinh</option>
+<option value="Nhi tiêu hóa">Nhi tiêu hóa</option>
+<option value="Sơ sinh">Sơ sinh</option>
+</optgroup>
+<optgroup label="Sản phụ khoa">
+<option value="Sản khoa">Sản khoa</option>
+<option value="Phụ khoa">Phụ khoa</option>
+<option value="Hiếm muộn — hỗ trợ sinh sản">Hiếm muộn — hỗ trợ sinh sản</option>
+</optgroup>
+<optgroup label="Da liễu">
+<option value="Da liễu">Da liễu</option>
+</optgroup>
+<optgroup label="xét nghiệm — chẩn đoán ">
+<option value="Chẩn đoán hình ảnh">Chẩn đoán hình ảnh (siêu âm, X-quang, CT, MRI…)</option>
+<option value="Giải phẫu bệnh">Giải phẫu bệnh</option>
+<option value="Huyết học xét nghiệm">Huyết học</option>
+<option value="Vi sinh">Vi sinh</option>
+<option value="Sinh hóa">Sinh hóa</option>
+</optgroup>
+
+<optgroup label="Gây mê — hồi sức">
+<option value="Gây mê — hồi sức">Gây mê — hồi sức</option>
+</optgroup>
+
+<optgroup label=" Y học cổ truyền">
+<option value="Y học cổ truyền">Y học cổ truyền</option>
+</optgroup>
+<optgroup label="Phục hồi chức năng">
+<option value="Phục hồi chức năng — vật lý trị liệu">Phục hồi chức năng — vật lý trị liệu</option>
+</optgroup> 
+<optgroup label="Y học thể thao">
+<option value="Y học thể thao">Y học thể thao</option>
+</optgroup>
+<optgroup label="Lão khoa">
+<option value="Lão khoa">Lão khoa</option>
+</optgroup>
+<optgroup label=" Các chuyên khoa khác">
+<option value="Nam khoa">Nam khoa</option>
+<option value="Đau mạn tính">Đau mạn tính</option>
+<option value="Dị tật bẩm sinh">Dị tật bẩm sinh</option>
+<option value="Y học hạt nhân">Y học hạt nhân</option>
+<option value="Chăm sóc giảm nhẹ">Chăm sóc giảm nhẹ</option>
+</optgroup>
+            </select>
+        </div>
+        <div class="form-group"><label>Số năm công tác</label><input name="experience" type="number" min="0" required></div>
+        <button type="submit">Đăng ký Bác sĩ</button>
+    </form>
+</div>
+
+<script>
+    function showNurseForm() {
+        hideAllForms();
+        document.getElementById('nurseForm').style.display = 'block';
+    }
+    function showDoctorForm() {
+        hideAllForms();
+        document.getElementById('doctorForm').style.display = 'block';
+    }
+    function showLoginForm() {
+        hideAllForms();
+        document.getElementById('loginForm').style.display = 'block';
+    }
+    function hideAllForms() {
+        document.getElementById('nurseForm').style.display = 'none';
+        document.getElementById('doctorForm').style.display = 'none';
+        document.getElementById('loginForm').style.display = 'none';
+    }
+</script>
+</body>
+</html>
