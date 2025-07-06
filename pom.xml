@@ -8,7 +8,13 @@
 		<version>3.5.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.aidicom</groupId>
+	<repositories>
+    <repository>
+        <id>dcm4che</id>
+        <url>https://www.dcm4che.org/maven2/</url>
+    </repository>
+</repositories>
+	<groupId>com.medical</groupId>
 	<artifactId>aidicom</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>aidicom</name>
@@ -36,10 +42,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 		<dependency>
@@ -50,6 +52,21 @@
 			<groupId>org.thymeleaf.extras</groupId>
 			<artifactId>thymeleaf-extras-springsecurity6</artifactId>
 		</dependency>
+		<dependency>
+    <groupId>org.dcm4che</groupId>
+    <artifactId>dcm4che-core</artifactId>
+    <version>5.26.0</version>
+</dependency>
+<dependency>
+    <groupId>org.dcm4che</groupId>
+    <artifactId>dcm4che-imageio</artifactId>
+    <version>5.26.0</version>
+</dependency>
+<dependency>
+    <groupId>org.apache.pdfbox</groupId>
+    <artifactId>pdfbox</artifactId>
+    <version>2.0.27</version>
+</dependency>
 
 		<dependency>
 			<groupId>com.mysql</groupId>
