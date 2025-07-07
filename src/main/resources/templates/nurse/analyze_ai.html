@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Phân tích AI (Google Vision + Gemini)</title>
+</head>
+<body>
+    <h1>Phân tích AI (Google Vision + Gemini)</h1>
+    <form th:action="@{/nurse/analyze-ai}" method="post" enctype="multipart/form-data">
+        <input type="file" name="image" accept="image/*" required />
+        <button type="submit">Phân tích</button>
+    </form>
+    <div th:if="${result}">
+        <h2>Kết quả:</h2>
+        <pre th:text="${result}"></pre>
+    </div>
+</body>
+</html>
+
+
+
+
+
