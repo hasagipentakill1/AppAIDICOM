@@ -11,7 +11,7 @@ import java.util.Base64;
 @Service
 public class AIService {
 
-    private final String GEMINI_API_KEY = "AIzaSyAz1AsGR3hUP-cZNyeTVCK5QplptltcCiM"; // <-- Đổi key của bạn
+    private final String GEMINI_API_KEY = ""; // <-- Đổi key của bạn
     private final String GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key=" + GEMINI_API_KEY;
 
     public String analyze(MultipartFile imageFile) throws Exception {
